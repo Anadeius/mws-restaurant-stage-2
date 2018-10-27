@@ -116,6 +116,6 @@ gulp.task('dev', ['build'], () => {
 gulp.task('default', ['build'], () => {
 	browserSync.init({
 		port: 8080,
-		server: './dist'
+		server: { baseDir: './dist' }
 	});
 });

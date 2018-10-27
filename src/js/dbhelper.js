@@ -58,8 +58,8 @@ export default class DBHelper {
 	fetch(`${DBHelper.DATABASE_URL}/${id}`)
 		.then((response) => response.json())
 		.then((networkRestaurant) => {
-			dbPromise.putRestaurants(networkRestaurant);
-			callback(error, null);
+			dbPromise.storeRestaurants(networkRestaurant);
+			callback(null, networkRestaurant);
 		}).catch((err) =>{
 			console.log(`Error fetching Restaurant ${id}, Error Code: ${err}`);
 			console.log(`Attempting to pull from IndexedDB`);

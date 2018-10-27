@@ -2,7 +2,7 @@
 	"name": "mws-restaurant-reviews",
 	"version": "0.1.0",
 	"scripts": {
-		"start": "gulp dev"
+		"start": "gulp"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.1.2",

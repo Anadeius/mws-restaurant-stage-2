@@ -1,9 +1,9 @@
-import idb from 'idb';
+import dbPromise from './dbHandler';
 
 /**
  * Common database helper functions.
  */
-class DBHelper {
+export default class DBHelper {
 
   /**
    * Database URL.
@@ -20,7 +20,22 @@ class DBHelper {
   static fetchRestaurants(callback) {
 	fetch(DBHelper.DATABASE_URL)
 		.then((response) => response.json())
-		.then((restaurants) => callback(null, restaurants));
+		.then((restaurants) => {
+			dbPromise.storeRestaurants(restaurants);
+			callback(null, restaurants);
+		}).catch((err) => {
+			console.log(`Error fetching Restaurants, Error Code: ${err}.`);
+			console.log(`Attempting to pull from IndexedDB`);
+			dbPromise.retrieveRestaurants().then((dbRestaurants) => {
+				if(dbRestaurants){
+					console.log('Restaurants successfully retrieved from IndexedDB');
+					callback(null, dbRestaurants);
+				}
+				else{
+					callback('No Restaurants Found.', null);
+				}
+			});
+		});
   }
 
   /**
@@ -28,7 +43,7 @@ class DBHelper {
    */
   static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
-    DBHelper.fetchRestaurants((error, restaurants) => {
+/*     DBHelper.fetchRestaurants((error, restaurants) => {
       if (error) {
         callback(error, null);
       } else {
@@ -39,8 +54,26 @@ class DBHelper {
           callback('Restaurant does not exist', null);
         }
       }
-    });
-  }
+	}); */
+	fetch(`${DBHelper.DATABASE_URL}/${id}`)
+		.then((response) => response.json())
+		.then((networkRestaurant) => {
+			dbPromise.putRestaurants(networkRestaurant);
+			callback(error, null);
+		}).catch((err) =>{
+			console.log(`Error fetching Restaurant ${id}, Error Code: ${err}`);
+			console.log(`Attempting to pull from IndexedDB`);
+			dbPromise.retrieveRestaurants(id).then((dbRestaurant) => {
+				if(dbRestaurant) {
+					console.log(`Restaurant successfully retrieved from IndexedDB`);
+					callback(null, dbRestaurant);
+				}
+				else{
+					callback('No Restaurants found', null);
+				}
+			});
+		})
+}
 
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
@@ -155,7 +188,7 @@ class DBHelper {
       alt: restaurant.name,
       url: DBHelper.urlForRestaurant(restaurant)
       })
-      marker.addTo(newMap);
+      marker.addTo(map);
     return marker;
   } 
   /* static mapMarkerForRestaurant(restaurant, map) {
@@ -170,4 +203,3 @@ class DBHelper {
   } */
 
 }
-

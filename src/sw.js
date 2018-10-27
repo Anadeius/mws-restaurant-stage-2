@@ -1,17 +1,17 @@
-const restaurantReviewsCacheName = 'restaurantReviews-static-001';
-const imgsCacheName = 'restaurantReviews-images-001'; 
+const restaurantReviewsCacheName = 'restaurantReviews-static-002';
+const imgsCacheName = 'restaurantReviews-images-002'; 
 
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(restaurantReviewsCacheName).then((cache) => {
             return cache.addAll([
                 '/',
-                '/index.html',
                 '/restaurant.html',
                 '/css/styles.css',
-                '/js/dbhelper.js',
                 '/js/main.js',
-                '/js/restaurant_info.js'
+				'/js/restaurant.js',
+				'/manifest.json',
+				
             ]);
         }).catch((err) => {
             console.log("Cache error while opening: " + err);
@@ -23,27 +23,9 @@ self.addEventListener('fetch', (event) => {
     let requestURL = new URL(event.request.url);
 
     if (requestURL.origin === location.origin) {
-        if (requestURL.pathname === '/') {
-            event.respondWith(caches.match('/'));
-            return;
-        }
         if (requestURL.pathname.startsWith('/images/')){
             event.respondWith(cachedImage(event.request));
             return;
-        }
-        if (requestURL.pathname.startsWith('/js/')){
-            if (requestURL.pathname.includes('dbhelper.js')){
-                event.respondWith(caches.match('/js/dbhelper.js'));
-                return;
-            }
-            if (requestURL.pathname.includes('main.js')){
-                event.respondWith(caches.match('/js/main.js'));
-                return;
-            }
-            if (requestURL.pathname.includes('restaurant_info.js')){
-                event.respondWith(caches.match('/js/restaurant_info.js'));
-                return;
-            }
         }
         if (requestURL.pathname === '/restaurant.html'){
             event.respondWith(caches.match('/restaurant.html'));
@@ -58,7 +40,7 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
-cachedImage = (request) => {
+const cachedImage = (request) => {
     return caches.open(imgsCacheName).then((cache) => {
         return cache.match(request.url).then((response) =>{
             if (response) return response;

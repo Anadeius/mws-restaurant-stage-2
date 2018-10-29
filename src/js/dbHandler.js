@@ -10,6 +10,9 @@ const dbPromise = {
 
 	retrieveRestaurants(restaurantID = undefined) {
 		return this.db.then(db => {
+			if(!Number.isInteger(restaurantID) && !restaurantID){
+				restaurantID = Number(restaurantID);
+			}
 			let store = db.transaction('restaurants').objectStore('restaurants');
 			if(restaurantID) return store.get(restaurantID)
 			return store.getAll();
@@ -35,33 +38,3 @@ const dbPromise = {
 };
 
 export default dbPromise;
-
-/* 
-const dbPromise = idb.open('restaurant-db', 1, (upgradeDB) => {
-	switch(upgradeDB.oldVersion){
-		case 0:
-			let restaurantStore = upgradeDB.createObjectStore('restaurants', { keyPath: 'id' });
-	}
-});
-
-const retrieveRestaurant = (restaurant) => {
-	return dbPromise.then((db) => {
-		let store = db.transaction('restaurants').objectStore('restaurants');
-		return store.get(restaurant);
-	}).then((value) => {
-		console.log(`The value of ${restaurant} is:`, value);
-	});
-};
-
-const storeRestaurants = (restaurant) => {
-	return dbPromise.then((db) => {
-		let tx = db.transaction('restaurants');
-		let store = tx.objectStore('restaurants');
-		store.put(restaurant, restaurant.id);]
-		return tx.complete;
-	}).then(() => {
-		console.log(`Added ${restaurant} to restaurants`);
-	});
-};
-
-export default { retrieveRestaurant, storeRestaurant } */

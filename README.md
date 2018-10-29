@@ -9,11 +9,7 @@ Stage 2 utilized the modified code of Stage 1, which can be found [here](https:/
 
 The application requires NodeJS to function properly.
 
-<<<<<<< HEAD
 1. Clone this repo and the data server repo, which can be found in the mws-restaurant-stage-2-data-server repo.
-=======
-1. Clone this repo and the data server repo, which can be found at https://github.com/Anadeius/mws-restaurant-stage-2-data-server
->>>>>>> 59a24575df5f85663c3479af26de9d70592debb0
 
 2. Navigate to both folders in your Terminal editor of choice. 
 

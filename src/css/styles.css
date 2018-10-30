@@ -66,12 +66,14 @@ nav h1 a {
   text-transform: uppercase;
 }
 #breadcrumb {
+	height:20px;
     padding: 10px 40px 16px;
     list-style: none;
     background-color: #eee;
     font-size: 1.05rem;
     margin: 0;
-    width: calc(50% - 80px);
+	width: calc(50% - 80px);
+	text-align: unset;
 }
 
 /* Display list items side by side */
@@ -337,7 +339,8 @@ nav h1 a {
 
   #breadcrumb {
     padding-left: 20px;
-    width: 100%;
+	width: 100%;
+	text-align: unset;
   }
 
   #breadcrumb li {
